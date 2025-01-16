@@ -2,6 +2,8 @@ import pygame
 import sys
 
 pygame.init()
+logo = pygame.image.load('assets/images/logo.png')
+pygame.display.set_icon(logo)
 
 # Constants
 SCREEN_WIDTH = 800
