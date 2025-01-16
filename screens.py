@@ -6,11 +6,12 @@ pygame.init()
 # Constants
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
-BUTTON_WIDTH = 250 
-BUTTON_HEIGHT = 60 
+BUTTON_WIDTH = 300
+BUTTON_HEIGHT = 60
 BUTTON_MARGIN = 20
-FONT_SIZE = 40  
-TITLE_FONT_SIZE = 60 
+FONT_SIZE = 20
+FONT = r"assets\fonts\Pixeled.ttf"
+TITLE_FONT_SIZE = 38
 
 # Colors
 WHITE = (255, 255, 255)
@@ -25,8 +26,8 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Main Menu")
 
 # Font - Using a nicer font
-font = pygame.font.Font(None, FONT_SIZE)
-title_font = pygame.font.Font(None, TITLE_FONT_SIZE)
+font = pygame.font.Font(FONT, FONT_SIZE)
+title_font = pygame.font.Font(FONT, TITLE_FONT_SIZE)
 
 # Load background image
 background_image = pygame.image.load('assets/images/BG.jpg')
@@ -39,7 +40,7 @@ class Button:
         self.normal_color = LIGHT_BLUE
         self.hover_color = HOVER_COLOR
         self.current_color = self.normal_color
-        self.border_radius = 10  # Rounded corners
+        self.border_radius = 10 
 
     def draw(self, screen):
         # Draw button shadow
@@ -55,7 +56,7 @@ class Button:
         
         # Draw text with slight shadow effect
         text_surface = font.render(self.text, True, BLACK)
-        text_rect = text_surface.get_rect(center=self.rect.center)
+        text_rect = text_surface.get_rect(center=(self.rect.center[0],self.rect.center[1] - 2))
         screen.blit(text_surface, text_rect)
 
     def handle_hover(self, pos):
@@ -88,9 +89,9 @@ class SettingsButton:
 
 def main_menu():
     buttons = [
-        Button("Play", (SCREEN_WIDTH - BUTTON_WIDTH) // 2, SCREEN_HEIGHT // 2 - BUTTON_HEIGHT - BUTTON_MARGIN),
-        Button("Instructions", (SCREEN_WIDTH - BUTTON_WIDTH) // 2, SCREEN_HEIGHT // 2),
-        Button("Code", (SCREEN_WIDTH - BUTTON_WIDTH) // 2, SCREEN_HEIGHT // 2 + BUTTON_HEIGHT + BUTTON_MARGIN)
+        Button("PLAY", (SCREEN_WIDTH - BUTTON_WIDTH) // 2, SCREEN_HEIGHT // 1.8 - BUTTON_HEIGHT - BUTTON_MARGIN),
+        Button("INSTRUCTIONS", (SCREEN_WIDTH - BUTTON_WIDTH) // 2, SCREEN_HEIGHT // 1.8),
+        Button("CODE", (SCREEN_WIDTH - BUTTON_WIDTH) // 2, SCREEN_HEIGHT // 1.8 + BUTTON_HEIGHT + BUTTON_MARGIN)
     ]
     settings_button = SettingsButton()
 
@@ -98,8 +99,8 @@ def main_menu():
         screen.blit(background_image, (0, 0))
 
         # Draw title
-        title_surface = title_font.render("Life OverSimplified", True, BLACK)
-        title_rect = title_surface.get_rect(center=(SCREEN_WIDTH // 2, 150))
+        title_surface = title_font.render("LIFE OVERSIMPLIFIED", True, BLACK)
+        title_rect = title_surface.get_rect(center=(SCREEN_WIDTH // 2, 180))
         screen.blit(title_surface, title_rect)
 
         for event in pygame.event.get():
