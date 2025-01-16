@@ -9,37 +9,58 @@ SCREEN_HEIGHT = 600
 BUTTON_WIDTH = 200
 BUTTON_HEIGHT = 50
 BUTTON_MARGIN = 20
-FONT_SIZE = 30
+FONT_SIZE = 36  # Increased font size
 
 # Colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GRAY = (200, 200, 200)
+LIGHT_BLUE = (100, 180, 255)
+DARK_BLUE = (60, 140, 220)
+HOVER_COLOR = (80, 160, 240)
 
 # Initialize screen
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Main Menu")
 
-# Font
+# Font - Using a nicer font
 font = pygame.font.Font(None, FONT_SIZE)
 
-# Button class
 class Button:
     def __init__(self, text, x, y):
         self.text = text
         self.rect = pygame.Rect(x, y, BUTTON_WIDTH, BUTTON_HEIGHT)
-        self.color = GRAY
+        self.normal_color = LIGHT_BLUE
+        self.hover_color = HOVER_COLOR
+        self.current_color = self.normal_color
+        self.border_radius = 10  # Rounded corners
 
     def draw(self, screen):
-        pygame.draw.rect(screen, self.color, self.rect)
+        # Draw button shadow
+        shadow_rect = self.rect.copy()
+        shadow_rect.y += 4
+        pygame.draw.rect(screen, DARK_BLUE, shadow_rect, border_radius=self.border_radius)
+        
+        # Draw main button
+        pygame.draw.rect(screen, self.current_color, self.rect, border_radius=self.border_radius)
+        
+        # Draw border
+        pygame.draw.rect(screen, DARK_BLUE, self.rect, 2, border_radius=self.border_radius)
+        
+        # Draw text with slight shadow effect
         text_surface = font.render(self.text, True, BLACK)
         text_rect = text_surface.get_rect(center=self.rect.center)
         screen.blit(text_surface, text_rect)
 
+    def handle_hover(self, pos):
+        if self.rect.collidepoint(pos):
+            self.current_color = self.hover_color
+        else:
+            self.current_color = self.normal_color
+
     def is_clicked(self, pos):
         return self.rect.collidepoint(pos)
 
-# Main menu function
 def main_menu():
     buttons = [
         Button("Play", (SCREEN_WIDTH - BUTTON_WIDTH) // 2, SCREEN_HEIGHT // 2 - BUTTON_HEIGHT - BUTTON_MARGIN),
@@ -50,6 +71,7 @@ def main_menu():
     while True:
         screen.fill(WHITE)
 
+        # Handle events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -59,10 +81,60 @@ def main_menu():
                     if button.is_clicked(event.pos):
                         print(f"{button.text} button clicked")
 
+        # Handle hover effects
+        mouse_pos = pygame.mouse.get_pos()
         for button in buttons:
+            button.handle_hover(mouse_pos)
             button.draw(screen)
 
         pygame.display.flip()
 
 if __name__ == "__main__":
     main_menu()
+    class SettingsButton:
+        def __init__(self):
+            self.image = pygame.image.load('assets/images/Settings_icon.png')
+            self.image = pygame.transform.scale(self.image, (40, 40))
+            self.rect = self.image.get_rect()
+            self.rect.topright = (SCREEN_WIDTH - 20, 20)
+            self.bg_rect = pygame.Rect(self.rect.x - 5, self.rect.y - 5, 50, 50)
+
+        def draw(self, screen):
+            pygame.draw.rect(screen, GRAY, self.bg_rect, border_radius=25)
+            screen.blit(self.image, self.rect)
+
+        def is_clicked(self, pos):
+            return self.bg_rect.collidepoint(pos)
+
+    def main_menu():
+        buttons = [
+            Button("Play", (SCREEN_WIDTH - BUTTON_WIDTH) // 2, SCREEN_HEIGHT // 2 - BUTTON_HEIGHT - BUTTON_MARGIN),
+            Button("Instructions", (SCREEN_WIDTH - BUTTON_WIDTH) // 2, SCREEN_HEIGHT // 2),
+            Button("Code", (SCREEN_WIDTH - BUTTON_WIDTH) // 2, SCREEN_HEIGHT // 2 + BUTTON_HEIGHT + BUTTON_MARGIN)
+        ]
+        settings_button = SettingsButton()
+
+        while True:
+            screen.fill(WHITE)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if settings_button.is_clicked(event.pos):
+                        print("Settings button clicked")
+                    for button in buttons:
+                        if button.is_clicked(event.pos):
+                            print(f"{button.text} button clicked")
+
+            mouse_pos = pygame.mouse.get_pos()
+            for button in buttons:
+                button.handle_hover(mouse_pos)
+                button.draw(screen)
+
+            settings_button.draw(screen)
+            pygame.display.flip()
+
+    if __name__ == "__main__":
+        main_menu()
