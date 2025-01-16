@@ -25,7 +25,7 @@ HOVER_COLOR = (80, 160, 240)
 
 # Initialize screen
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Main Menu")
+pygame.display.set_caption("Life Oversimplified")
 
 # Font - Using a nicer font
 font = pygame.font.Font(FONT, FONT_SIZE)
